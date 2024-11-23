@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   phonebook.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/23 19:07:40 by aldalmas          #+#    #+#             */
+/*   Updated: 2024/11/23 19:51:55 by aldalmas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "phonebook.hpp"
 
 Phonebook::Phonebook(void) {
@@ -11,11 +23,14 @@ void	Phonebook::run(void) {
 	std::cout << "📕 Welcome to your own Phonebook ! 📕" << std::endl;
 	while (true)
 	{
-		std::cout << "[PHONEBOOK] Please use ADD, SEARCH or EXIT: \n>";
-		std::cin >> this->user_choice;
-		this->check_add();
-		this->check_search();
-		this->check_exit();
+		std::cout << "Please use ADD, SEARCH or EXIT: \n►";
+		std::getline(std::cin, this->user_choice);
+		if (!this->user_choice.empty())
+		{
+			this->check_add();
+			this->check_search();
+			this->check_exit();
+		}
 	}
 }
 
@@ -38,16 +53,23 @@ std::string	Phonebook::form_check_loop(const std::string& field_label) {
 
 	while (true)
 	{
-		std::cout << field_label << ": ";
+		std::cout << "►" << field_label << ": ";
 		std::getline(std::cin, field);
-		if (field_label == "Phone number" && this->check_phone_number(field))
-			break ;
 		if (field.empty())
 			std::cout << "❌ This field can't be empty" << std::endl;
-		if (all_characters_are(field, ' '))
+		else if (char_are_spaces(field) == true)
 			std::cout << "❌ This field contains only space" << std::endl;
-		else 
-			break ;
+		if (field_label == "Phone number")
+		{
+			if (char_are_digits(field) == false)
+				std::cout << "❌ This field must contains only digits" << std::endl;
+			else if (field.size() != 10)
+				std::cout << "❌ This field must contains 10 digits" << std::endl;
+			else
+				break;
+		}
+		else
+			break;
 	}
 	std::cout << "✅ " << field_label << " confirmed" << std::endl;
 	return field;
@@ -79,23 +101,9 @@ void	Phonebook::show_contact_details(const int i) const {
 	std::cout << "► Dark secret: " << this->contacts[i].secret << "\n" << std::endl;
 }
 
-bool	Phonebook::check_phone_number(const std::string& field) {
-	if (all_characters_are(field, 0))
-	{
-		std::cout << "❌ This field must contains only digits" << std::endl;
-		return false;
-	}
-	else if (field.size() != 10)
-	{
-		std::cout << "❌ This field must contains 10 digits" << std::endl;
-		return false;
-	}
-	return true;
-}
-
 void	Phonebook::check_search(void) const {
 	if (this->user_choice.compare("search") == 0 || this->user_choice.compare("SEARCH") == 0)
-		std::cout << "search found" << std::endl;
+		return;
 }
 
 void	Phonebook::check_exit(void) const {
@@ -111,14 +119,19 @@ Phonebook::~Phonebook(void) {
 	return;
 }
 
-bool all_characters_are(const std::string& str, char c) {
-	if (str.empty())
-		return false;
+bool char_are_digits(const std::string& str) {
 	for (std::size_t i = 0; i < str.size(); i++)
 	{
-		if (std::isdigit(c) && !std::isdigit(str[i]))
+		if (!std::isdigit(str[i]))
 			return false;
-		if (std::isspace(c) && !std::isspace(str[i]))
+	}
+	return true;
+}
+
+bool char_are_spaces(const std::string& str) {
+	for (std::size_t i = 0; i < str.size(); i++)
+	{
+		if (!std::isspace(str[i]))
 			return false;
 	}
 	return true;
