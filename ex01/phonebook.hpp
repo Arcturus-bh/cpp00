@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:20 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/23 17:32:04 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/11/23 19:45:27 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <cctype>
+#include <array>
 #include "contact.hpp"
 
 class Phonebook 
@@ -27,7 +28,6 @@ class Phonebook
 		~Phonebook(void);
 
 		std::string form_check_loop(const std::string& field_label);
-		bool 		check_phone_number(const std::string& phone_nb);
 		void 		run(void);
 		void 		show_contact_details(const int i) const;
 		void 		check_add(void);
@@ -36,7 +36,7 @@ class Phonebook
 		void 		check_exit(void) const;
 };
 
-bool	all_characters_are(const std::string& str, char c);
-
+bool char_are_digits(const std::string& str);
+bool char_are_spaces(const std::string& str);
 
 #endif
