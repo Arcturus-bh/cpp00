@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 19:07:40 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/23 19:51:55 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/11/27 14:33:11 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,125 +14,190 @@
 
 Phonebook::Phonebook(void) {
 
+	this->oldest_idx = -1;
 	this->run();
-
 	return;
 }
 
 void	Phonebook::run(void) {
-	std::cout << "📕 Welcome to your own Phonebook ! 📕" << std::endl;
+	colored_print(CYAN, "\n📕 Welcome to your own Phonebook ! 📕", true);
 	while (true)
 	{
-		std::cout << "Please use ADD, SEARCH or EXIT: \n►";
+		std::cout << "└─ Please use ADD, SEARCH or EXIT: \n►";
 		std::getline(std::cin, this->user_choice);
 		if (!this->user_choice.empty())
 		{
-			this->check_add();
-			this->check_search();
-			this->check_exit();
+			if (this->check_add())
+				this->add();
+			else if (this->check_search())
+				this->search();
+			else
+				this->check_exit();
 		}
 	}
 }
 
-void	Phonebook::check_add(void) {
+bool	Phonebook::check_add(void) const {
 	if (this->user_choice.compare("add") == 0 || this->user_choice.compare("ADD") == 0)
+		return true;
+	return false;
+}
+
+bool	Phonebook::check_search(void) const {
+	if (this->user_choice.compare("search") == 0 || this->user_choice.compare("SEARCH") == 0)
+		return true;
+	return false;
+}
+
+void	Phonebook::check_exit(void) const {
+	if (this->user_choice.compare("exit") == 0 || this->user_choice.compare("EXIT") == 0)
 	{
-		for (int i = 0; i < this->contacts.size(); i++)
-		{
-			if (this->contacts[i].first_name == "")
-			{
-				this->add(i);
-				break ;
-			}
-		}
+		colored_print(MAGENTA, "Phonebook is now closing...", true);
+		exit (0);
 	}
 }
 
 std::string	Phonebook::form_check_loop(const std::string& field_label) {
-	std::string field;
+	std::string user_field;
 
 	while (true)
 	{
-		std::cout << "►" << field_label << ": ";
-		std::getline(std::cin, field);
-		if (field.empty())
-			std::cout << "❌ This field can't be empty" << std::endl;
-		else if (char_are_spaces(field) == true)
-			std::cout << "❌ This field contains only space" << std::endl;
-		if (field_label == "Phone number")
-		{
-			if (char_are_digits(field) == false)
-				std::cout << "❌ This field must contains only digits" << std::endl;
-			else if (field.size() != 10)
-				std::cout << "❌ This field must contains 10 digits" << std::endl;
-			else
-				break;
-		}
+		std::cout << CYAN << "►" << field_label << ": " << RESET;
+		std::getline(std::cin, user_field);
+		if (user_field.empty())
+			colored_print(RED, "❌ This field can't be empty", true);
+		else if (char_are_spaces(user_field) == true)
+			colored_print(RED, "❌ This field contains only space", true);
+		else if (field_label != "Nickname" && field_label != "Phone number" && find_digit(user_field))
+			colored_print(RED, "❌ This field can't contains digit", true);
+		// else if (field_label == "Phone number")
+		// {
+		// 	if (char_are_digits(user_field) == false)
+		// 		colored_print(RED, "❌ This field must contains only digits");
+		// 	else if (user_field.size() != 10)
+		// 		colored_print(RED, "❌ This field must contains 10 digits");
+		// 	else
+		// 		break;
+		//}
 		else
 			break;
 	}
-	std::cout << "✅ " << field_label << " confirmed" << std::endl;
-	return field;
+	return user_field;
 }
 
-void	Phonebook::add(const int i) {
+int	Phonebook::find_slot(void) {
+	for (int i = 0; i < this->contacts.size(); i++)	
+	{
+		if (this->contacts[i].first_name == "")
+			return i;
+	}
+	if (this->oldest_idx == 7)
+		this->oldest_idx = 0;
+	else if (this->oldest_idx < 7)
+		this->oldest_idx++;
+	return this->oldest_idx;
+}
+
+void	Phonebook::add(void) {
+	int 		idx = this->find_slot();
 	std::string user_firstname = "";
 	std::string user_lastname = "";
 	std::string user_nickname = "";
 	std::string user_phone = "";
 	std::string user_secret = "";
 
-	std::cout << "[PHONEBOOK] Adding a contact..." << std::endl;
 	user_firstname = this->form_check_loop("First name");
 	user_lastname = this->form_check_loop("Last name");
 	user_nickname = this->form_check_loop("Nickname");
 	user_phone = this->form_check_loop("Phone number");
 	user_secret = this->form_check_loop("Darkest secret");
-	this->contacts[i] = Contact(user_firstname, user_lastname, user_nickname, user_phone, user_secret);	
-	std::cout << "✅👤 Contact added successfully !\n" << std::endl;
-	this->show_contact_details(i);
+	this->contacts[idx] = Contact(user_firstname, user_lastname, user_nickname, user_phone, user_secret);	
+	colored_print(GREEN, "✅👤 Contact added successfully !\n", true);
 }
 
-void	Phonebook::show_contact_details(const int i) const {
+void	Phonebook::search(void) {
+	int 		user_choice;
+	std::string reformated_field;
+
+	colored_print(BLUE, "╔═══════════════════════════════════════════╗", true);
+	colored_print(BLUE, "║", false);
+	std::cout << std::setw(10) << "Index";
+	colored_print(BLUE, "║", false);
+	std::cout << std::setw(10) << "First name";
+	colored_print(BLUE, "║", false);
+	std::cout << std::setw(10) << "Last name";
+	colored_print(BLUE, "║", false);
+	std::cout << std::setw(10) << "Nickname";
+	colored_print(BLUE, "║", true);
+	colored_print(BLUE, "║═══════════════════════════════════════════║", true);
+	for (int i = 0; i < this->contacts.size(); i++) {
+		colored_print(BLUE, "║", false);
+		std::cout << std::setw(10) << i;
+		colored_print(BLUE, "║", false);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].first_name);
+		colored_print(BLUE, "║", false);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].last_name);
+		colored_print(BLUE, "║", false);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].nickname);
+		colored_print(BLUE, "║", true);
+	}
+	colored_print(BLUE, "╚═══════════════════════════════════════════╝", true);
+	this->which_contact_choose();
+}
+
+void	Phonebook::which_contact_choose(void) {
+	int			idx = 0;
+	std::string choice = "";
+
+	while (true)
+	{
+		std::cout << "└─ Please choose an index to see more infos or use 8 for back:\n►";
+		std::cin >> choice;
+
+		if (choice < "0" || choice > "9") {
+			colored_print(RED, "❌ This field must contains only digits", true);
+			continue;
+		}
+		else
+			idx = std::stoi(choice);
+		if (idx >= 0 && idx <= 8)
+		{
+			if (idx == 8)
+				return;
+			if (this->contacts[idx].first_name != "")
+			{
+				this->show_contact_details(idx);
+				return;
+			}
+			else
+				colored_print(RED, "❌ This contact does not exist", true);
+		}
+		else
+			colored_print(RED, "❌ You must choose between 0 and 8", true);
+	}
+}
+
+std::string Phonebook::check_field_len(const std::string& field) const{
+	std::string reformated = "";
+
+	if (field.size() > 10)
+	{
+		reformated.append(field, 0, 10);
+		reformated[9] = '.';
+	}
+	else
+		reformated = field;
+	return reformated;
+}
+
+void	Phonebook::show_contact_details(int i) const {
 	std::cout << "► First name: " << this->contacts[i].first_name << std::endl;
 	std::cout << "► Last name: " << this->contacts[i].last_name << std::endl;
 	std::cout << "► Nickname: " << this->contacts[i].nickname << std::endl;
 	std::cout << "► Phone number: " << this->contacts[i].phone_nb << std::endl;
-	std::cout << "► Dark secret: " << this->contacts[i].secret << "\n" << std::endl;
-}
-
-void	Phonebook::check_search(void) const {
-	if (this->user_choice.compare("search") == 0 || this->user_choice.compare("SEARCH") == 0)
-		return;
-}
-
-void	Phonebook::check_exit(void) const {
-	if (this->user_choice.compare("exit") == 0 || this->user_choice.compare("EXIT") == 0)
-	{
-		std::cout << "Phonebook is now closing..." << std::endl;
-		exit (0);
-	}
+	std::cout << "► Dark secret: " << this->contacts[i].secret << std::endl << std::endl;
 }
 
 Phonebook::~Phonebook(void) {
-	//std::cout << "destructeur appelé" << std::endl;
 	return;
-}
-
-bool char_are_digits(const std::string& str) {
-	for (std::size_t i = 0; i < str.size(); i++)
-	{
-		if (!std::isdigit(str[i]))
-			return false;
-	}
-	return true;
-}
-
-bool char_are_spaces(const std::string& str) {
-	for (std::size_t i = 0; i < str.size(); i++)
-	{
-		if (!std::isspace(str[i]))
-			return false;
-	}
-	return true;
 }

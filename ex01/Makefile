@@ -3,6 +3,7 @@ NAME = phonebook
 SRC = main.cpp \
 	  phonebook.cpp \
 	  contact.cpp \
+	  free_functions.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
