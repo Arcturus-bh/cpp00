@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 19:07:40 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/27 14:33:11 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:46:32 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,25 @@
 Phonebook::Phonebook(void) {
 
 	this->oldest_idx = -1;
+	colored_print(CYAN, "\n📕 Welcome to your own Phonebook ! 📕", true);
 	this->run();
+		
 	return;
 }
 
 void	Phonebook::run(void) {
-	colored_print(CYAN, "\n📕 Welcome to your own Phonebook ! 📕", true);
-	while (true)
+	while (1)
 	{
 		std::cout << "└─ Please use ADD, SEARCH or EXIT: \n►";
 		std::getline(std::cin, this->user_choice);
 		if (!this->user_choice.empty())
 		{
-			if (this->check_add())
+			if (this->check_add() == true)
 				this->add();
-			else if (this->check_search())
+			else if (this->check_search() == true)
 				this->search();
-			else
-				this->check_exit();
+			else if (this->check_exit() == true)
+				exit(0);
 		}
 	}
 }
@@ -49,12 +50,13 @@ bool	Phonebook::check_search(void) const {
 	return false;
 }
 
-void	Phonebook::check_exit(void) const {
+bool	Phonebook::check_exit(void) const {
 	if (this->user_choice.compare("exit") == 0 || this->user_choice.compare("EXIT") == 0)
 	{
 		colored_print(MAGENTA, "Phonebook is now closing...", true);
-		exit (0);
+		return true;
 	}
+	return false;
 }
 
 std::string	Phonebook::form_check_loop(const std::string& field_label) {
@@ -152,8 +154,7 @@ void	Phonebook::which_contact_choose(void) {
 	while (true)
 	{
 		std::cout << "└─ Please choose an index to see more infos or use 8 for back:\n►";
-		std::cin >> choice;
-
+		std::getline(std::cin, choice);
 		if (choice < "0" || choice > "9") {
 			colored_print(RED, "❌ This field must contains only digits", true);
 			continue;
@@ -191,11 +192,19 @@ std::string Phonebook::check_field_len(const std::string& field) const{
 }
 
 void	Phonebook::show_contact_details(int i) const {
+	colored_print(BLUE, "╔═══════════════════════════════════════════╗", true);
+	colored_print(BLUE, "║", false);
 	std::cout << "► First name: " << this->contacts[i].first_name << std::endl;
+	colored_print(BLUE, "║", false);
 	std::cout << "► Last name: " << this->contacts[i].last_name << std::endl;
+	colored_print(BLUE, "║", false);
 	std::cout << "► Nickname: " << this->contacts[i].nickname << std::endl;
+	colored_print(BLUE, "║", false);
 	std::cout << "► Phone number: " << this->contacts[i].phone_nb << std::endl;
+	colored_print(BLUE, "║", false);
 	std::cout << "► Dark secret: " << this->contacts[i].secret << std::endl << std::endl;
+	colored_print(BLUE, "║", true);
+	colored_print(BLUE, "╚═══════════════════════════════════════════╝", true);
 }
 
 Phonebook::~Phonebook(void) {

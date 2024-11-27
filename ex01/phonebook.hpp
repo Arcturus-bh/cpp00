@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:20 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/27 13:32:58 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:55:08 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ class Phonebook
 		int			find_slot(void);
 		bool 		check_add(void) const;
 		bool		check_search(void) const;
+		bool 		check_exit(void) const;
 		void 		add(void);
 		void 		run(void);
 		void 		show_contact_details(int i) const;
 		void		which_contact_choose(void);
 		void		search(void);
-		void 		check_exit(void) const;
 };
 
 bool char_are_digits(const std::string& str);
