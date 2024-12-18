@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 19:07:40 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/12/05 15:09:18 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:25:09 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ std::string	Phonebook::form_check_loop(const std::string& field_label) {
 int	Phonebook::find_slot(void) {
 	for (size_t i = 0; i < 8; i++)	
 	{
-		if (this->contacts[i].first_name == "")
+		if (this->contacts[i].getFirstname() == "")
 			return i;
 	}
 	if (this->oldest_idx == 7)
@@ -134,11 +134,11 @@ void	Phonebook::search(void) {
 		colored_print(BLUE, "║", false);
 		std::cout << std::setw(10) << i;
 		colored_print(BLUE, "║", false);
-		std::cout << std::setw(10) << check_field_len(this->contacts[i].first_name);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].getFirstname());
 		colored_print(BLUE, "║", false);
-		std::cout << std::setw(10) << check_field_len(this->contacts[i].last_name);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].getLastname());
 		colored_print(BLUE, "║", false);
-		std::cout << std::setw(10) << check_field_len(this->contacts[i].nickname);
+		std::cout << std::setw(10) << check_field_len(this->contacts[i].getNickname());
 		colored_print(BLUE, "║", true);
 	}
 	colored_print(BLUE, "╚═══════════════════════════════════════════╝", true);
@@ -158,12 +158,12 @@ void	Phonebook::which_contact_choose(void) {
 			continue;
 		}
 		else
-			idx = std::stoi(choice);
+			idx = std::atoi(choice.c_str());
 		if (idx >= 0 && idx <= 8)
 		{
 			if (idx == 8)
 				return;
-			if (this->contacts[idx].first_name != "")
+			if (this->contacts[idx].getFirstname() != "")
 			{
 				this->show_contact_details(idx);
 				return;
@@ -192,16 +192,15 @@ std::string Phonebook::check_field_len(const std::string& field) const{
 void	Phonebook::show_contact_details(int i) const {
 	colored_print(BLUE, "╔═══════════════════════════════════════════╗", true);
 	colored_print(BLUE, "║", false);
-	std::cout << "► First name: " << this->contacts[i].first_name << std::endl;
+	std::cout << "► First name: " << this->contacts[i].getFirstname() << std::endl;
 	colored_print(BLUE, "║", false);
-	std::cout << "► Last name: " << this->contacts[i].last_name << std::endl;
+	std::cout << "► Last name: " << this->contacts[i].getLastname() << std::endl;
 	colored_print(BLUE, "║", false);
-	std::cout << "► Nickname: " << this->contacts[i].nickname << std::endl;
+	std::cout << "► Nickname: " << this->contacts[i].getNickname() << std::endl;
 	colored_print(BLUE, "║", false);
-	std::cout << "► Phone number: " << this->contacts[i].phone_nb << std::endl;
+	std::cout << "► Phone number: " << this->contacts[i].getPhonenumber() << std::endl;
 	colored_print(BLUE, "║", false);
-	std::cout << "► Dark secret: " << this->contacts[i].secret << std::endl << std::endl;
-	colored_print(BLUE, "║", true);
+	std::cout << "► Dark secret: " << this->contacts[i].getSecret() << std::endl;
 	colored_print(BLUE, "╚═══════════════════════════════════════════╝", true);
 }
 
