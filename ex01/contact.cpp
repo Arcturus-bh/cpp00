@@ -38,19 +38,19 @@ void Contact::setFirstname(std::string first_name) {
 }
 
 void Contact::setLastname(std::string last_name) {
-	this->_first_name = last_name;
+	this->_last_name = last_name;
 }
 
 void Contact::setNickname(std::string nickname) {
-	this->_first_name = nickname;
+	this->_nickname = nickname;
 }
 
 void Contact::setPhonenumber(std::string phone) {
-	this->_first_name = phone;
+	this->_phone_nb = phone;
 }
 
 void Contact::setSecret(std::string secret) {
-	this->_first_name = secret;
+	this->_secret = secret;
 }
 
 // -------------------GETTERS---------------------------------
