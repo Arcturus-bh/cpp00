@@ -1,19 +1,20 @@
 NAME = phonebook
 
 SRC = main.cpp \
-	  phonebook.cpp \
 	  contact.cpp \
+	  phonebook.cpp \
 	  free_functions.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
-CC = c++ -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CC = c++
+FLAGS =  -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
-.c.o = $(CC) -c -o $(OBJ)
+%.o: %.cpp
+	$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@${CC} $(OBJ) -o $(NAME)
-	@echo "Archivage terminé [phonebook]"
+	@${CC} $(FLAGS) $(OBJ) -o $(NAME)
 
 all: $(NAME)
 

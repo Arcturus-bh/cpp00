@@ -6,7 +6,7 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 15:34:20 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/27 16:55:08 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:09:39 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <iostream>
 #include <string>
 #include <cctype>
-#include <array>
-#include <algorithm>
 #include "contact.hpp"
 #include <iomanip>
 
@@ -34,7 +32,7 @@ class Phonebook
 	public:
 		int						oldest_idx;
 		std::string 			user_choice;
-		std::array<Contact, 8> 	contacts;
+		Contact contacts[8];
 
 		Phonebook(void);
 		~Phonebook(void);

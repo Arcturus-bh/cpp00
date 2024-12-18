@@ -4,13 +4,14 @@ SRC = megaphone.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
-CC = g++ -Wall -Wextra -Werror -std=c++98
+CC = c++
+FLAGS =  -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
-.c.o = $(CC) -c -o $(OBJ)
+%.o: %.cpp
+	$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@${CC} $(OBJ) -o $(NAME)
-	@echo "Archivage terminé [megaphone]"
+	@${CC} $(FLAGS) $(OBJ) -o $(NAME)
 
 all: $(NAME)
 

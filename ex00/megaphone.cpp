@@ -16,7 +16,7 @@ int main(int ac, char **av)
 		if (y < ac)
 			upper_str + " ";
 	}
-	for (int i = 0; i < upper_str.size(); i++)
+	for (size_t i = 0; i < upper_str.size(); i++)
 	{
 		if (upper_str[i] >= 'a' && upper_str[i] <= 'z')
 			upper_str[i] = std::toupper(upper_str[i]);

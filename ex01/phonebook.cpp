@@ -6,14 +6,13 @@
 /*   By: aldalmas <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 19:07:40 by aldalmas          #+#    #+#             */
-/*   Updated: 2024/11/27 17:46:32 by aldalmas         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:09:18 by aldalmas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "phonebook.hpp"
 
 Phonebook::Phonebook(void) {
-
 	this->oldest_idx = -1;
 	colored_print(CYAN, "\n📕 Welcome to your own Phonebook ! 📕", true);
 	this->run();
@@ -72,15 +71,15 @@ std::string	Phonebook::form_check_loop(const std::string& field_label) {
 			colored_print(RED, "❌ This field contains only space", true);
 		else if (field_label != "Nickname" && field_label != "Phone number" && find_digit(user_field))
 			colored_print(RED, "❌ This field can't contains digit", true);
-		// else if (field_label == "Phone number")
-		// {
-		// 	if (char_are_digits(user_field) == false)
-		// 		colored_print(RED, "❌ This field must contains only digits");
-		// 	else if (user_field.size() != 10)
-		// 		colored_print(RED, "❌ This field must contains 10 digits");
-		// 	else
-		// 		break;
-		//}
+		else if (field_label == "Phone number")
+		{
+			if (char_are_digits(user_field) == false)
+		 		colored_print(RED, "❌ This field must contains only digits", true);
+		 	else if (user_field.size() != 10)
+		 		colored_print(RED, "❌ This field must contains 10 digits", true);
+		 	else
+		 		break;
+		}
 		else
 			break;
 	}
@@ -88,7 +87,7 @@ std::string	Phonebook::form_check_loop(const std::string& field_label) {
 }
 
 int	Phonebook::find_slot(void) {
-	for (int i = 0; i < this->contacts.size(); i++)	
+	for (size_t i = 0; i < 8; i++)	
 	{
 		if (this->contacts[i].first_name == "")
 			return i;
@@ -118,7 +117,6 @@ void	Phonebook::add(void) {
 }
 
 void	Phonebook::search(void) {
-	int 		user_choice;
 	std::string reformated_field;
 
 	colored_print(BLUE, "╔═══════════════════════════════════════════╗", true);
@@ -132,7 +130,7 @@ void	Phonebook::search(void) {
 	std::cout << std::setw(10) << "Nickname";
 	colored_print(BLUE, "║", true);
 	colored_print(BLUE, "║═══════════════════════════════════════════║", true);
-	for (int i = 0; i < this->contacts.size(); i++) {
+	for (size_t i = 0; i < 8; i++) {
 		colored_print(BLUE, "║", false);
 		std::cout << std::setw(10) << i;
 		colored_print(BLUE, "║", false);
